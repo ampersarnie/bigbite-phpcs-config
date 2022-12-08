@@ -8,6 +8,10 @@ jobs:
       - checkout
       - run:
           command: |
+            composer install
+          name: Composer install
+      - run:
+          command: |
             composer run all-checks-strict
           name: Run all checks (PHP 7.4)
   notify_slack:
