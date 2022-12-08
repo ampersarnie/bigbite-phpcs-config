@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  run_php_tests:
+  php_74_tests:
     docker:
       - image: cimg/php:7.4
     steps:
@@ -13,7 +13,20 @@ jobs:
       - run:
           command: |
             composer run all-checks-strict
-          name: Run all checks (PHP 7.4)
+          name: Run all checks
+  php_80_tests:
+    docker:
+      - image: cimg/php:8.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            composer install --ignore-platform-reqs
+          name: Composer install
+      - run:
+          command: |
+            composer run all-checks-strict
+          name: Run all checks
   notify_slack:
     docker:
       - image: cimg/node:17.2.0
@@ -26,7 +39,8 @@ jobs:
 workflows:
   run_tests:
     jobs:
-      - run_php_tests
+      - php_74_tests
+      - php_80_tests
   run_notify_slack:
     jobs:
       - notify_slack:
